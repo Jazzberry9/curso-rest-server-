@@ -6,7 +6,12 @@ const userControllersGet = (req, res = response ) => {
     const {q, nombre = "no name", apikey, page = 1, limit } = req.query
 
     res.status(200).json({
-        msg: 'get API - From user controllers'
+        msg: 'get API - From user controllers',
+        q,
+        nombre,
+        apikey,
+        page,
+        limit
     });
 }
 const userControllersPost = (req, res = response ) => {
