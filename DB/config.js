@@ -1,8 +1,6 @@
 const mongoose = require('mongoose');
 
 
-
-
 const dbConnection = async () => {
 
     try {
@@ -16,7 +14,7 @@ const dbConnection = async () => {
 
     } catch (error) {
         console.log(error); // Para chequear cual es el error
-        throw new Error('Error a inicializar la base de datos'); // Dispara el error
+        throw new Error('Error al inicializar la base de datos'); // Dispara el error
     }
 
 

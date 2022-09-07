@@ -67,9 +67,11 @@ const userControllersDelete = async (req, res = response ) => {
 
     // Se hace asi para "eliminar"
     const hideUser = await Usuario.findByIdAndUpdate( id, { estado: false } )
+    // const usuarioAutenticado = req.userx; // el mismo userx de validarjwt
 
     res.json({
-        hideUser
+        hideUser, 
+        // usuarioAutenticado
     });
 }
 

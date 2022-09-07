@@ -1,20 +1,23 @@
+const { body } = require('express-validator');
 const { check } = require('express-validator');
 const { Router } = require('express');
 
+const { esAdminRole, tieneRole } = require('../middlewares/validar-roles');
 const { pruebaValidador } = require('../middlewares/msg-validar');
-const { esRolValido, emailExiste, comprobarUsuarioId } = require('../helpers/db-validators');
+const { validarJWT } = require('../middlewares/validar-jwt');
 
+const { esRolValido, emailExiste, comprobarUsuarioId } = require('../helpers/db-validators');
 const { userControllersGet,
         userControllersPut,
         userControllersPost,
         userControllersPatch,
         userControllersDelete } = require('../controllers/user.controllers');
 
-const validarEmail = check('correo', 'El correo no es valido').isEmail().custom( emailExiste );
-const validarNombre = check('nombre','Nombre no valido, rectifique').not().isEmpty();
-const validarPassword = check('password','La contrasena debe ser mayor de 6 caracteres').isLength({min:6});
+const validarEmail = body('correo', 'El correo no es valido').isEmail().custom( emailExiste );
+const validarNombre = body('nombre','Nombre no valido, rectifique').not().isEmpty();
+const validarPassword = body('password','La contrasena debe ser mayor de 6 caracteres').isLength({min:6});
 // verificacion personalizada
-const validarRol = check('rol').custom( esRolValido );
+const validarRol = body('rol').custom( esRolValido );
 const validarId = check('id', 'No es un Id valido de MongoDb').isMongoId().custom( comprobarUsuarioId );
 
 // viene de express
@@ -31,8 +34,8 @@ router.put('/:id', [validarId, validarRol, pruebaValidador], userControllersPut)
 router.post('/', [validarEmail, validarNombre, validarRol, validarPassword, pruebaValidador] ,userControllersPost) 
 
 router.patch('/',userControllersPatch) 
-
-router.delete('/:id',[ validarId, pruebaValidador ], userControllersDelete) 
+// esAdminRole se usa abajo si se quiere dar permiso solo al admin
+router.delete('/:id',[ validarJWT, tieneRole('ADMIN_ROLE','VENTAS_ROLE','USER_ROLE'), validarId, pruebaValidador ], userControllersDelete) 
 
 
 
