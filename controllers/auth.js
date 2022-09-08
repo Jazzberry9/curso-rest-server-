@@ -1,7 +1,8 @@
-const { response } = require("express");
+const { response, request } = require("express");
 const anyName = require("../models/usuario");
 const bcryptjs = require("bcryptjs");
 const { generarJWT } = require("../helpers/generar-jwt");
+const { googleVerify } = require("../helpers/google-verify");
 
 
 const login = async(req,res = response) => {
@@ -46,12 +47,57 @@ const login = async(req,res = response) => {
         return res.json({
             msg: 'hable con el admi'
         })
-    }
-
-    
-    
+    }    
 };
 
+    const googleSignIn = async( req = request, res = response) => {
+
+        const { id_token } = req.body;
+
+        try {
+            
+            const { correo, nombre, img } = await googleVerify( id_token )
+
+            let randomaver = await anyName.findOne({ correo })
+
+            if ( !randomaver ){
+                const data = {
+                    nombre,
+                    correo,
+                    password: 'simply',
+                    img,
+                    // rol: 'USER_ROL',
+                    google: true
+                }
+
+                randomaver = new anyName( data )
+                await randomaver.save();
+            }
+
+            // Check si el usuario ha sido puesto como false en la BD
+            if (!randomaver.estado){
+                res.status(401).json({
+                    msg: 'Hable con el admin, usuario bloqueado'
+                })
+            }
+
+            // GENERAR JWT
+            const token = await generarJWT( randomaver.id );
+
+            res.json({
+                randomaver,
+                token
+            })
+
+        } catch (error) {
+            res.status(400).json({
+                ok:false,
+                msg: 'token no se pudo verificar'
+            })
+        }
+    }
+
 module.exports = {
-    login
+    login,
+    googleSignIn
 }
