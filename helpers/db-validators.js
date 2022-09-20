@@ -1,3 +1,4 @@
+const { Categoria, Producto } = require('../models');
 const Role = require('../models/role');
 const Usuario = require('../models/usuario'); // U mayuscula para poder crear instancia del modelo
 
@@ -23,9 +24,23 @@ const comprobarUsuarioId = async( id ) =>{
         throw new Error( `La id: ${id} no existe en la base de datos` );
     }
 }
+const comprobarCategoriaId = async( id ) =>{
+    const categoriaId = await Categoria.findById(id)
+    if (!categoriaId){
+        throw new Error( `La categoria no existe en la base de datos` );
+    }
+}
+const comprobarProductoId = async( id ) =>{
+    const productoId = await Producto.findById(id)
+    if (!productoId){
+        throw new Error( `El producto no existe en la base de datos` );
+    }
+}
 
 module.exports = {
     esRolValido,
     emailExiste,
-    comprobarUsuarioId
+    comprobarUsuarioId,
+    comprobarCategoriaId,
+    comprobarProductoId
 }

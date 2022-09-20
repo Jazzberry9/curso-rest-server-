@@ -34,7 +34,9 @@ const validarJWT = async(req = request, res = response, next) => {
         }
 
 
-
+        // Cuando se use el validar jwt, tendremos acceso a userx
+        // Si el toke es correcto, este middleware nos da acceso
+        // al userx en las req de los controladores
         req.userx = userx;
 
     next()    

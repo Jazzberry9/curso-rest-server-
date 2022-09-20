@@ -32,7 +32,7 @@ const tieneRole = (...roles) => {
 
     if(!roles.includes( req.userx.rol )){ //es decir, si no tiene el usuario requested.
         return res.status(401).json({
-            msg:`El Servicio requiere uno de estos ${roles}`
+            msg:`Servicio solo disponible para los siguientes roles: ${roles}`
         })
     }
 
