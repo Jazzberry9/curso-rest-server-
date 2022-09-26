@@ -36,11 +36,22 @@ const comprobarProductoId = async( id ) =>{
         throw new Error( `El producto no existe en la base de datos` );
     }
 }
+const allowedCollections = (coleccion = '', colecciones = []) => {
+
+    const checkCollection = colecciones.includes( coleccion );
+
+    if( !checkCollection ){
+        throw new Error (`La coleccion ${coleccion} no esta permitida --- ${colecciones}`)
+    }
+    // en todas deberia tener el return true btw.
+    return true;
+}
 
 module.exports = {
     esRolValido,
     emailExiste,
     comprobarUsuarioId,
     comprobarCategoriaId,
-    comprobarProductoId
+    comprobarProductoId,
+    allowedCollections
 }
