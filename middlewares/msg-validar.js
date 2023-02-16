@@ -15,8 +15,8 @@ const { validationResult } = require('express-validator');
 
     const pruebaValidador = ( req, res, next) => {
         const errorFormatter = ( location, msg, param) => {
-                    return `Error ubicado en ${location} para la validacion de [${param}]: ${msg}`;
-                    }
+            return `Error ubicado en ${location} para la validacion de [${param}]: ${msg}`;
+            }
         const errors = validationResult(req).formatWith(errorFormatter);
         if (!errors.isEmpty()){
             return res.status(400).json(errors);

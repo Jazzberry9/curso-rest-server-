@@ -8,8 +8,6 @@ const { validarSubirArchivo } = require('../middlewares/validar-archivo');
 const router = Router();
 
 
-
-
 router.post('/',[
     validarSubirArchivo
 ] ,cargarArchivos);
